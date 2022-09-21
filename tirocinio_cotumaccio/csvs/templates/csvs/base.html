@@ -1,0 +1,11 @@
+{% extends 'app/common.html' %}
+
+{% block content %}
+
+  <form action="" method="POST" class="ui form" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{form}}
+      <button type="submit" class="ui button primary">Conferma</button>
+  </form>
+
+{% endblock %}
