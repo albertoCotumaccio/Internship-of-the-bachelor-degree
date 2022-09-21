@@ -1,0 +1,22 @@
+{% load togliSpazi %}
+{% load estrai %}
+
+<!-- Modale eliminazione fornitore -->
+<div class="modal fade" id="{{ing.nome_generico|togli_spazi}}-elimina" tabindex="-1" role="dialog" aria-labelledby="modaleEliminazioneCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="container justify-content-center" id="titolo"><b>Elimina ingrediente: {{ing.nome_generico}}</b></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">Stai eliminando {{q|estrai:0}} gr di {{ing.nome_generico}} dalla ricetta {{ricetta.nome}}. Confermare?
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+        <button type="submit" value="{{ing.nome_generico}}|{{ricetta.nome}}" name="elimina" class="btn btn-danger">Elimina</button>
+      </div>
+    </div>
+  </div>
+</div>

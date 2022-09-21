@@ -1,0 +1,241 @@
+{% extends 'app/common.html' %}
+
+{% block title %}{{ricetta.nome|capfirst}}{% endblock %}
+
+
+{% load estrai %}
+{% load togliSpazi %}
+
+{% block content %}
+
+<style type="text/css">
+        .btn-circle.btn-sm {
+            width: 30px;
+            height: 30px;
+            padding: 6px 0px;
+            border-radius: 15px;
+            font-size: 8px;
+            text-align: center;
+        }
+    </style>
+
+
+<div class="container-fluid my-2 text-center">
+
+  
+  
+  <h1 class="mb-2">
+    {{ricetta.nome|capfirst}}
+
+     
+
+  </h1>
+
+
+
+
+{% if not ricetta.approvata and user.is_staff %}
+
+<form method="POST">
+   {% csrf_token %}
+
+
+
+<button type="submit" value="approva" name="approva" class="btn btn-outline-success">Approva ricetta</button>
+{% endif %}
+
+</form>
+
+  <hr width="100%" >
+
+
+
+ 
+
+  <div class="container-fluid justify-content-center" >
+
+    {% if bottoneModifica %}
+      <a href="{% url 'modificaricetta' ricetta.nome ricetta.portata %}" class="btn btn-outline-dark mr-2">{% include 'app/partials/icone/_matita.html' %} Modifica</a>
+    {% endif %}
+
+
+<a href="{% url 'duplicaricetta' ricetta.nome ricetta.portata %}" class="btn btn-outline-secondary">Duplica</a>
+
+
+<br/>
+
+
+<br/>
+
+
+
+{% if ricetta.foto %}
+  <img src="{{ricetta.foto.url}}" class="img-fluid">
+{% endif %}
+
+<br/>
+
+    <p align=left >{% include 'app/partials/icone/_info_square.html' %} Stato: {% if ricetta.approvata %} Approvata ✔ {% else %} Non approvata ❌ {% endif %} </p>
+
+    {% if ricetta.chef %}
+          <p align=left >{% include 'app/partials/icone/_info_square.html' %} Chef: {{ ricetta.chef.user.first_name|capfirst}} {{ ricetta.chef.user.last_name|capfirst}} - {{ricetta.chef.impianto.nome}}</p>
+    {% endif %}
+  
+    <p align=left >▷Portata: {{ ricetta.portata}} </p>
+
+    <p align=left >▷Tag: {{ ricetta.tag}} </p>
+
+    {% if ricetta.special %}
+        <p align=left >{% include 'app/partials/icone/_star.html' %} Special: Si </p>
+    {% else %}
+      <p align=left >{% include 'app/partials/icone/_star.html' %} Special: No </p>
+    {% endif %}
+    
+
+    <p align=left >{% include 'app/partials/icone/_warning.html' %} Allergeni: {{allergeni}} </p>
+
+
+<br/>
+
+</div>
+
+
+<datalist id="lista">
+ {% for ing in ingredientes %}
+        <option value="{{ ing.nome_generico|capfirst}}">
+ {% endfor %}
+    </datalist>
+
+
+<form method="POST">
+   {% csrf_token %}
+
+
+<div class="row justify-content-center">
+  <div class="col-md-5 ">   
+      <div class="input-group mb-3">
+          <input type="text" list="lista" name="ingre" class="form-control" Placeholder="Cerca un nuovo ingrediente..." >
+        <div class="input-group-append">
+          <input type="number" min="1" step="1" max="500" value="1"  id="myRange" name='q'>
+        </div>
+      </div>
+    <p>Quantità (gr): <span id="demo"></span></p>
+
+    <button type="submit" value="Aggiungi" name="aggiungi" class="btn btn-success ml-3">Aggiungi {% include 'app/partials/icone/_plus.html' %}</button>
+     
+        
+  </div>
+
+</div>
+
+</form>
+
+
+
+
+<script>
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value;
+
+slider.oninput = function() {
+  output.innerHTML = this.value;
+}
+</script> 
+
+
+</div>
+
+
+
+
+
+
+
+
+</div>
+
+  <br/>
+
+
+<select class="form-select " style="width: auto" onChange="window.location.href=this.value">
+    {% for impianto in imps %}
+        {% if impianto == imp %}
+          <option selected value="{{impianto}}">{{impianto|capfirst}}</option>
+        {% elif impianto == 'tutti gli impianti' %}
+          <option value="{% url 'pivot' ricetta.nome %}">{{impianto|capfirst}}</option>
+        {% else %}
+          <option value="{{impianto}}">{{impianto|capfirst}}</option>
+        {% endif %}
+    {% endfor %}
+</select>
+
+
+<div class="table-responsive">
+<table class="table" border="3" align="center">
+<thead>
+<tr>
+<th><font color=#469f35>Ingrediente</font></th> 
+<th><font color=#469f35>Allergeni</font></th> 
+<th><font color=#469f35>Quantità</font></th> 
+<th><font color=#469f35>Costo</font></th> 
+<th><font color=#469f35>Calorie</font></th> 
+<th><font color=#469f35>Carboidrati</font></th> 
+<th><font color=#469f35>Proteine</font></th> 
+<th><font color=#469f35>Grassi</font></th> 
+</tr>
+</thead>
+<tbody>
+<tr>
+  {% for ing, q in diz.items %}
+    <td>
+      {% if bottoneModifica %}
+        <button type="button" class="btn btn-danger btn-circle btn-sm" data-toggle="modal" data-target="#{{ ing.nome_generico|togli_spazi }}-elimina">{% include 'app/partials/icone/_cestino.html' %}</button>
+      {% endif %}
+            <strong> {{ing.nome_generico|capfirst}} </strong>
+
+            {% if bottoneModifica %}
+                    <form method="POST">
+                    {% csrf_token %}
+                        {% include 'app/partials/mod_elimina_ingrediente_ricetta.html' %}
+                  </form>
+            {% endif %}
+
+
+    </td>
+    <td>{{ q|estrai:6   }}  </td>
+    <td>{{ q|estrai:0  }} gr</td>
+    <td>{{ q|estrai:1  }} € </td>
+    <td>{{ q|estrai:2  }}   </td>
+    <td>{{ q|estrai:3  }}   </td>
+    <td>{{ q|estrai:4  }}   </td>
+    <td>{{ q|estrai:5  }}   </td>
+</tr>
+{% endfor %}
+<td style="color:#FF0000"><strong> Totale complessivo </strong></color></td>
+<td>          </td>
+<td style="color:#FF0000">{{ totale|slice:"0:1"|join:" "  }} gr</td>
+<td style="color:#FF0000">{{ totale|slice:"1:2"|join:" "  }} €</td>
+<td style="color:#FF0000">{{ totale|slice:"2:3"|join:" "  }}</td>
+<td style="color:#FF0000">{{ totale|slice:"3:4"|join:" "  }}</td>
+<td style="color:#FF0000">{{ totale|slice:"4:5"|join:" "  }}</td>
+<td style="color:#FF0000">{{ totale|slice:"5:6"|join:" "  }}</td>
+</tbody>
+
+</table>
+</div>
+
+  <br/>
+    <br/>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+

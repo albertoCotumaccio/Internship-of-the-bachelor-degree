@@ -1,0 +1,117 @@
+
+<!--Script per barra destra per importazione menu -->
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
+
+
+
+  <div class="d-grid gap-2 col-4 mx-auto">
+    <button class="btn btn-info" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Importa un menu</button>
+  </div>
+
+
+    <div class="input-group justify-content-end">
+
+    <input required type="number" min="1" step="1" max="20" value="{{tagsList|length}}" name='numTags' >
+
+    <button type="submit" name="cambiaNumeroTags" class="btn btn-secondary btn-sm"><b>Seleziona tags</b></button>
+
+   
+
+  </div>
+
+  
+<h3><b>Componi il menu selezionando i tag desiderati</b></h3>
+    
+   <div class="form-check">
+  <input class="form-check-input" type="checkbox" value="yes" id="flexCheckDefault" name="soloRicetteImpianto" >
+  <label class="form-check-label" for="flexCheckDefault">
+    Utilizzare solo le ricette dell'impianto {{impianto.nome}}
+  </label>
+</div>
+
+
+</br>
+
+
+
+
+  <div class="d-grid gap-2 col-8 mx-auto">
+    <button type="submit" value="avanti" name="avanti" class="btn btn-success btn-lg">Avanti</button>
+  </div>
+
+
+
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasRightLabel">Scegli il menu da importare</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+
+
+  <div class="offcanvas-body">
+    <h5>
+
+  {% for imp,diz in daImportare.items %}
+      <div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h3 class="accordion-header" id="heading{{forloop.counter}}">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{forloop.counter}}" aria-expanded="true" aria-controls="collapse{{forloop.counter}}">
+        <h5><strong>{{imp.nome|capfirst}} - {{imp.area|capfirst}}</strong></h5>
+      </button>
+    </h3>
+
+    {% if imp == impianto %}
+    <div id="collapse{{forloop.counter}}" class="accordion-collapse collapse show" aria-labelledby="heading{{forloop.counter}}" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+    {% else %}
+    <div id="collapse{{forloop.counter}}" class="accordion-collapse collapse collapse" aria-labelledby="heading{{forloop.counter}}" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+    {% endif %}
+        {% for anno,settimane in diz.items %}
+              {% for settimana in settimane %}
+                  <button type="submit" class="btn btn-link" name="importa" 
+                    value="{{imp}}-{{settimana}}-{{anno}}">
+                      Settimana {{settimana}} del {{anno}}</button>
+              <br>
+             {% endfor %} 
+          {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+    </h5>
+  </div>
+</div>
+
+
+
+
+</br>
+
+
+{% for giorno,data in settimana.items %}
+<div class="card">
+  <h5 class="card-header"><strong>{{giorno}} {{data}}</strong></h5>
+  <br>
+
+
+  <div class="card-body">
+    {% for tag in tagsList %}
+      <select class="form-select form-select" id="{{forloop.counter}}{{tag.nome}}" name="{{forloop.counter}}{{giorno}}">
+        <option value=""><i>------</i></option>
+          {% for tag in tags %}
+            {% if forloop.parentloop.counter == forloop.counter %}
+              <option value="{{tag.nome}}" name="{{forloop.parentloop.counter}}{{giorno}}" selected>{{tag.nome}}</option>
+            {% else %}
+              <option value="{{tag.nome}}" name="{{forloop.parentloop.counter}}{{giorno}}" >{{tag.nome}}</option>
+            {% endif %}
+          {% endfor %}
+      </select>
+  {% endfor %}
+  </div>
+
+</div>
+</br>
+{% endfor %}

@@ -1,0 +1,39 @@
+{% extends 'app/common.html' %}
+
+
+{% block title %}{{ing.nome_generico|capfirst}}{% endblock %}
+
+
+{% block content %}
+
+
+
+<div class="container-fluid my-2 text-center">
+
+  <h1>{{ing.nome_generico|capfirst}}</h1>
+  <hr color="#469f35" width="100%" >
+  <br/>
+
+
+
+
+
+<table style="width:100%">
+  {% for campo,value in campi.items %}
+  <tr>
+    <th><label for="{{campo}}">{{campo|capfirst}}</label></th>
+    <td><text id="{{campo}}">{{value|capfirst}}</text></td>
+
+  </tr>
+  {% endfor %}
+
+</table>
+
+
+
+
+
+</div>
+
+
+{% endblock %}

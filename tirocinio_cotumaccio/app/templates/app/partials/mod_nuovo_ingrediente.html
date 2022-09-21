@@ -1,0 +1,105 @@
+<!-- Modal -->
+<div class="modal fade" id="nuovo-ingrediente" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="titolo" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="container justify-content-center" id="titolo"><strong>Nuovo ingrediente</strong></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+  
+    <div class="form-row">
+    <div class="col-md-6 mb-4">
+      <label for="validationDefault01">Nome generico</label>
+      <input type="text" name="nome_generico" class="form-control" id="validationDefault01" required>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <label for="validationDefault02">Nome specifico</label>
+      <input type="text" name="nome_specifico" class="form-control" id="validationDefault02"  required>
+    </div>
+  </div>
+
+  <div class="form-row justify-content-center">
+ <div class="col-md-4 mb-4">
+      <label for="validationDefault15">Listino</label>
+      <input type="number" name="listino"  value="0" min="0" step="0.1" max="500"  class="form-control" id="validationDefault15" required>
+    </div>
+</div>
+
+
+  <div class="form-row justify-content-center">
+    <div class="col-md-4 mb-4">
+      <label for="validationDefault03">Energia Kcal</label>
+      <input type="number" name="kcal"  value="0" min="0" step="0.1" max="500"  class="form-control" id="validationDefault03" required>
+    </div>
+
+      <div class="col-md-4 mb-4">
+      <label for="validationDefault04">Acqua</label>
+      <input type="number" name="acqua"  value="0" min="0" step="0.1" max="500"  class="form-control" id="validationDefault04" required>
+    </div>
+</div>
+
+ <div class="form-row justify-content-center">
+
+  <div class="col-md-4 mb-4">
+      <label for="validationDefault05">Proteine vegetali</label>
+      <input type="number" name="vegetali"  value="0" min="0" step="0.1" max="500"  class="form-control" id="validationDefault05" required>
+    </div>
+
+      <div class="col-md-4 mb-4">
+      <label for="validationDefault06">Proteine animali</label>
+      <input type="number" name="animali"  value="0" min="0" step="0.1" max="500"  class="form-control" id="validationDefault06" required>
+    </div>
+
+  </div>
+
+ <div class="form-row justify-content-center">
+    <div class="col-md-4 mb-4">
+      <label for="validationDefault07">Amido</label>
+      <input type="number" name="amido"  value="0" min="0" step="0.1" max="500"  class="form-control" id="validationDefault07" required>
+    </div>
+
+      <div class="col-md-4 mb-4">
+      <label for="validationDefault08">Glucidi solubili</label>
+      <input type="number" name="solubili"  value="0" min="0" step="0.1" max="500"  class="form-control" id="validationDefault08" required>
+    </div>
+
+  </div>
+
+ <div class="form-row justify-content-center">
+    <div class="col-md-3 mb-4">
+      <label for="validationDefault09">Saturi</label>
+      <input type="number" name="saturi"  value="0" min="0" step="0.1" max="500"  class="form-control" id="validationDefault09" required>
+    </div>
+
+      <div class="col-md-3 mb-4">
+      <label for="validationDefault10">Monoinsaturi</label>
+      <input type="number" name="monoinsaturi"  value="0" min="0" step="0.1" max="500"  class="form-control" id="validationDefault10" required>
+    </div>
+
+         <div class="col-md-3 mb-4">
+      <label for="validationDefault11">Polinsaturi</label>
+      <input type="number" name="polinsaturi"  value="0" min="0" step="0.1" max="500"  class="form-control" id="validationDefault11" required>
+    </div>
+
+
+         <div class="col-md-3 mb-4">
+      <label for="validationDefault12">Altri polinsaturi</label>
+      <input type="number" name="altri_polinsaturi"  value="0" min="0" step="0.1" max="500"  class="form-control" id="validationDefault12" required>
+    </div>
+
+  </div>
+  
+
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+        <button name="conferma-ingrediente" class="btn btn-primary" type="submit">Conferma</button>
+      </div>
+    </div>
+  </div>
+</div>

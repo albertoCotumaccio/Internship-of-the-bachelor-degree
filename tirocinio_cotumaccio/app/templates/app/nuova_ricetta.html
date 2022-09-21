@@ -1,0 +1,163 @@
+{% extends 'app/common.html' %}
+
+{% block title %}Nuova ricetta{% endblock %}
+
+{% block content %}
+
+
+
+<div class="container-fluid my-2 text-center">
+
+  <h1>Crea una nuova ricetta</h1>
+
+  <hr color="#469f35">
+  <br/>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+<form method="POST" action="" enctype="multipart/form-data">
+  {% csrf_token %}
+
+
+
+ 
+<div class="row justify-content-center">
+        <div class="col-md-8"> 
+<div class="input-group input-group-lg">
+  <label for="portata" class="input-group-text"><b>Portata</b></label>
+  <select class="form-select" id="portata" name="portata" aria-label="portata" size="{{portate|length}}" required onChange="window.location.href=this.value">
+    {% for portata in portate %}
+      {% if portata.nome == filtro %}
+        <option selected value="{{portata.nome}}" name="portata" >{{portata.nome}}</option>
+      {% else %}
+        <option value="{{portata.nome}}" name="portata" >{{portata.nome}}</option>
+      {% endif %}
+    {% endfor %}
+  </select>
+</div>
+</div>
+</div>
+
+
+
+
+<div class="row justify-content-center mt-4">
+        <div class="col-md-8">   
+<div class="input-group input-group-lg">
+  <label for="chef" class="input-group-text"><b>Assegna chef</b></label>
+  <select required class="form-select" id="chef" name="chef" aria-label="chef">
+    {% for chef in chefs %}
+      {% if chef == "" %}
+        <option selected value="{{chef.user_id}}" name="chef" >-</option>
+      {% else %}
+        <option value="{{chef.user_id}}" name="chef" >
+        {{chef}} - {{chef.impianto}}</option>
+      {% endif %}
+      
+    {% endfor %}
+  </select>
+</div>
+
+</div>
+</div>
+
+<div class="row justify-content-center mt-4">
+        <div class="col-md-8"> 
+<div class="input-group input-group-lg">
+  <label for="nome_id" class="input-group-text"><b>Nome ricetta</b></label>
+   <input type="text" id="nome_id" class="form-control" maxlength="100" name="nome" placeholder="Inserisci il nome della nuova ricetta" value="{{ nome }}" required>
+
+</div>
+</div>
+</div>
+
+
+
+<div class="row justify-content-center mt-4">
+        <div class="col-md-8"> 
+<div class="input-group input-group-lg">
+  <label for="tag" class="input-group-text"><b>Tag</b></label>
+   <select class="form-select" id="tag" name="tag" aria-label="tag" required>
+  <option value=""><i>Seleziona il tag della ricetta</i></option>
+  {% for tag in tags %}
+    <option value="{{tag.nome}}" name="tag" >{{tag.nome}}</option>
+  {% endfor %}
+  </select>
+</div>
+</div>
+</div>
+
+
+<div class="row justify-content-center mt-4">
+        <div class="col-md-8"> 
+<div class="input-group input-group-lg">
+  <label align="left" for="special" class="form-control"><b>E' una ricetta special</b></label> 
+    <div class="input-group-prepend">
+    <div class="input-group-text">
+      <input type="checkbox" name="special" id="special">
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+
+
+<div class="row justify-content-center mt-4">
+        <div class="col-md-8"> 
+<div class="input-group input-group-lg">
+  <label for="image" class="input-group-text"><b>Foto </b> <small> (opzionale)</small></label>
+ <input class="form-control" type="file" name="image" id="image">
+</div>
+</div>
+</div>
+
+<br>
+<button onClick="removeRequired(this.form)" type="submit"formtarget="_blank" name="cerca" class="btn btn-link btn-sm">Cerca foto su google: <span id="demo" value="Cerca" for="nome_id" ></span></button>
+
+<br>
+<br>
+<br>
+
+<div class="d-grid gap-2 col-6 mx-auto">
+  <button type="submit" value="Save" name="Save" class="btn btn-success btn-lg">Crea ricetta</button>
+
+  </br>
+  </br>
+</div>
+</div>
+
+</form>
+
+
+
+<!-- Quando clicco il bottone "cerca" invoco questa funzione: elimina tutti i fields required (tranne il nome della ricetta da ricercare) -->
+<script>
+function removeRequired(form){
+    $.each(form, function(key, value) {
+        if ( value.hasAttribute("required") && value.id != 'nome_id'){
+            value.removeAttribute("required");
+        }
+    });
+}
+</script>
+
+
+
+<!-- per compilazione in tempo reale della ricerca su google -->
+<script>
+var slider = document.getElementById("nome_id");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value;
+
+slider.oninput = function() {
+  output.innerHTML = this.value;
+}
+</script> 
+
+</div>
+
+{% endblock %}

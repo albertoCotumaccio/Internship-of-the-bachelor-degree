@@ -1,0 +1,120 @@
+{% extends 'app/common.html' %}
+
+{% block title %}Approva ricette{% endblock %}
+
+{% load togliSpazi %}
+{% block content %}
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet"/>
+
+
+
+<div class="container-fluid my-2 text-center">
+
+  <h1>Approva le ricette  
+    <br>
+    <h4><span class="badge bg-info">{{count}} risultati</span></h4> 
+  </h1>
+
+  
+  <hr color="#469f35" width="100%" >
+  <br/>
+
+
+
+
+<form method="POST" >
+  {% csrf_token %}
+
+
+
+<div class="container">
+
+  <div class="input-group">
+
+    {% if filtro %}
+        <input type="text" class="form-control" name="filtro" value="{{filtro}}" Placeholder="Inserisci una parola chiave...">
+    {% else %}
+        <input type="text" class="form-control" name="filtro" Placeholder="Inserisci una parola chiave...">
+    {% endif %}
+
+      <button type="submit" name="cerca" class="btn btn-secondary btn-sm">
+            Cerca {% include 'app/partials/icone/_lente.html' %}</button>
+  </div>
+
+</div>
+        
+
+<br/>
+
+
+    {% include 'app/partials/_paginazione.html' %}
+
+
+
+
+<table class="table"  id="table" data-toggle="table">
+  <thead class="table-light">
+    <tr>
+      <th scope="col" data-order='desc' data-sortable="true">Nome</th>
+      <th scope="col"data-order='desc' data-sortable="true">Portata</th>
+      <th scope="col"data-order='desc' data-sortable="true">Tag</th>
+      <th scope="col"data-order='desc' data-sortable="true">Special</th>
+      <th scope="col"data-order='desc' data-sortable="true">Chef</th>
+      <th scope="col"data-order='desc' data-sortable="true">Impianto</th>
+      <th scope="col">Elimina ricetta</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ricetta in page_obj %}
+    <tr>
+      <td><a href="{% url 'pivot' ricetta.nome %}">{{ricetta.nome|capfirst}}</a></td>
+      <td>{{ricetta.portata}}</td>
+      <td>{{ricetta.tag}}</td>
+      <td>
+        {% if ricetta.special %}
+          Si
+        {% else %}
+          No
+        {% endif %}
+      </td>
+      {% if ricetta.chef %}
+        <td>{{ricetta.chef}}</td>
+        <td>{{ricetta.chef.impianto}}</td>
+      {% else %}
+        <td>-</td>
+        <td>-</td>
+      {% endif %}
+
+        <td>
+              <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#{{ ricetta.nome|togli_spazi }}-elimina">{% include 'app/partials/icone/_cestino.html' %} Elimina</button>
+
+                  <form method="POST">
+                      {% csrf_token %}
+                           {% include 'app/partials/mod_elimina_ricetta.html' %}
+                  </form>
+        </td>
+     
+    </tr>
+
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+
+
+
+</form>
+
+
+
+</div>
+
+
+{% endblock %}

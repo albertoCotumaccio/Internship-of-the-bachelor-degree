@@ -1,0 +1,84 @@
+
+
+
+
+
+
+{% block content %}
+
+{% load get_item %}
+{% load estrai %}
+
+
+<style>
+    @page {
+        size: a4 portrait;
+        @frame header_frame {           /* Static Frame */
+            -pdf-frame-content: header_content;
+            left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+        }
+        @frame content_frame {          /* Content Frame */
+            left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+        }
+        @frame footer_frame {           /* Another static Frame */
+            -pdf-frame-content: footer_content;
+            left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+        }
+    }
+</style>
+
+
+
+    <!-- Content for Static Frame 'header_frame' -->
+    <div id="header_content">
+      <h1>{{impianto.nome|capfirst}} - settimana {{sett}}
+        <br>
+       {% for giorno in giorni %}
+            {{giorno}} {{settimana|estrai:giorno}}
+
+        {% endfor %}
+      {% if fornitoreSelezionato %}
+           | {{fornitoreSelezionato}}
+        {% endif %}
+         </h1>
+
+    </div>
+
+    {% for ricetta in ricetteGiorni %}
+      -{{ricetta.nome|capfirst}} : {{listaPorzioni|estrai:forloop.counter0}}
+      <br>
+    {% endfor %}
+    
+    <!-- HTML Content   -->
+   <hr>
+    <table>
+      <tr>
+        <th>Ingrediente</th>
+        <th>Fornitore</th>
+        <th>Quantita</th>
+        <th>Costo</th>
+      </tr>
+
+
+     {% for ing,lista in diz.items %}
+        <tr>
+            <td>{{ing.nome_generico|capfirst}}</td>
+            <td>{{lista|estrai:0|capfirst}}</td>
+            <td>{{lista|estrai:1}} kg</td>
+            <td>{{lista|estrai:2}} euro</td>
+        </tr>
+    {% endfor %}
+
+    </table>
+
+    <hr>
+
+    <p><strong>Totale: {{totale}} Euro </strong></p>
+
+
+<!-- Content for Static Frame 'footer_frame' -->
+    <div id="footer_content">(c) - pagina <pdf:pagenumber>
+        di <pdf:pagecount>
+    </div>
+
+{% endblock %}

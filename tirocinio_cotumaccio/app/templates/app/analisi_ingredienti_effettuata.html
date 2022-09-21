@@ -1,0 +1,64 @@
+{% extends 'app/common.html' %}
+
+{% block title %}Analisi ingredienti settimana {{sett}} del {{year}} {% endblock %}
+
+{% load estrai %}
+
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet"/>
+
+
+
+<div class="container-fluid my-2 text-center">
+  
+  <h1>Analisi ingredienti: Settimana {{sett}} del {{year}}</h1>
+    <hr width="100%" >
+
+
+
+ <form method="POST" action="">
+      {% csrf_token %}
+
+    <div class="col-4 mx-auto">
+      <a href="{% url 'analisi-ingredienti' year impianto.nome sett %}" class="btn btn-outline-info">
+                {% include 'app/partials/icone/_back.html' %} Esegui una nuova analisi degli ingredienti
+      </a>
+    </div>
+
+    <br>
+
+  <h5 align="left"><p>Portate selezionate : {{portateSelezionate}}</p></h5>
+  <h5 align="left"><p>Tag selezionati : {{tagsSelezionati}}</p></h5>
+  <h5 align="left"><p>Nature selezionate : {{natureSelezionate}}</p></h5>
+
+
+<table class="table table-hover" id="table" data-toggle="table">
+  <thead class="table-light">
+    <tr>
+      <th scope="col" data-order='desc' data-sortable="true" >Ingrediente</th>
+      <th scope="col" data-order='desc' data-sortable="true">Primario</th>
+      <th scope="col" data-order='desc' data-sortable="true">Secondario</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ingrediente,coppia in ingCount.items %}
+      <tr>
+        <td>{{ingrediente.nome_generico|capfirst}}</td>
+        <td>{{coppia|estrai:0}}</td>
+        <td>{{coppia|estrai:1}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+
+
+</form>
+
+</div>
+{% endblock %}
