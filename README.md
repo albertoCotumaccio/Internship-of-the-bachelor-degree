@@ -50,4 +50,4 @@ During the testing phase, several ideas emerged to **improve and expand the syst
 
 ### Author 👨‍💻
 
-*   Alberto Cotumaccio - [https://github.com/AlbertoCotu](https://github.com/AlbertoCotu)
+*   Alberto Cotumaccio
