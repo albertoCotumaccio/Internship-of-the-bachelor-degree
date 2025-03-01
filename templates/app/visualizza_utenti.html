@@ -1,0 +1,125 @@
+{% extends 'app/common.html' %}
+
+{% block title %}Gestisci utenti{% endblock %}
+
+
+{% load togliSpazi %}
+
+
+
+{% block content %}
+
+
+
+
+
+
+
+
+
+<div class="container-fluid my-2 text-center">
+
+  <h1>Gestisci utenti
+    <br>
+    <h4><span class="badge bg-info">{{count}} risultati</span></h4> 
+  </h1>
+
+  
+  <hr color="#469f35" width="100%" >
+
+
+
+ <div class="d-grid gap-2 d-md-flex justify-content-center" >
+
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#nuovo-chef">
+      {% include 'app/partials/icone/_plus.html' %} Nuovo chef
+    </button>
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#nuovo-direzionale">
+     {% include 'app/partials/icone/_plus.html' %} Nuovo utente direzionale
+    </button>
+
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#nuovo-capoarea">
+     {% include 'app/partials/icone/_plus.html' %} Nuovo capoarea
+    </button>
+
+</div>
+
+
+
+<form method="POST" >
+  {% csrf_token %}
+
+{% include 'app/partials/mod_nuovo_chef.html' %}
+
+</form>
+
+
+<form method="POST" >
+  {% csrf_token %}
+
+{% include 'app/partials/mod_nuovo_direzionale.html' %}
+
+</form>
+
+
+<form method="POST" >
+  {% csrf_token %}
+
+{% include 'app/partials/mod_nuovo_capoarea.html' %}
+
+</form>
+
+
+<br>
+
+
+
+
+<div class="d-flex justify-content-start">
+<ul class="nav nav-pills mb-3" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active"href="{% url 'utenti' %}">Tutti gli utenti</a>
+  </li>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Chefs</a>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="{% url 'utenti-chefs' %}">Tutti gli chef</a>
+      <div class="dropdown-divider"></div>
+      {% for impianto in impianti %}
+      <a class="dropdown-item" href="{% url 'utenti-chefs-impianto' impianto.nome %}">{{impianto.nome|capfirst}}</a>
+      {% endfor %}
+    </div>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link"href="{% url 'utenti-direzionali' %}">Utenti direzionali</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" href="{% url 'utenti-capoarea' %}">Capo area</a>
+  </li>
+</ul>
+</div>
+
+
+
+
+
+
+
+    {% include 'app/partials/_paginazione.html' %}
+
+
+
+
+
+ {% include 'app/partials/tabella_utenti.html' %}
+
+
+
+
+
+
+</div>
+
+
+{% endblock %}
+

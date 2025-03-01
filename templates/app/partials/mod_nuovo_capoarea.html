@@ -1,0 +1,63 @@
+
+<!-- Modal -->
+<div class="modal fade" id="nuovo-capoarea" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="titolo" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="container justify-content-center" id="titolo"><strong>Nuovo capoarea</strong></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+  
+    <div class="form-row">
+    <div class="col-md-6 mb-4">
+      <label for="validationDefault01">Username</label>
+      <input type="text" name="username" class="form-control" id="validationDefault01" required>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <label for="validationDefault02">Password</label>
+      <input type="text" name="password" class="form-control" id="validationDefault02"  required>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="col-md-6 mb-4">
+      <label for="validationDefault02">Nome</label>
+      <input type="text" name="nome" class="form-control" id="validationDefault02" required>
+    </div>
+    <div class="col-md-6 mb-4">
+      <label for="validationDefault02">Cognome</label>
+      <input type="text" name="cognome" class="form-control" id="validationDefault02"  required>
+    </div>
+    
+  </div>
+  <div class="form-row">
+    <div class="col-md-6 mb-4">
+      <label for="validationDefault03">Email</label>
+      <input type="email" name="email" class="form-control" id="validationDefault03">
+    </div>
+    <div class="col-md-6 mb-4">
+      <label for="validationDefault04">Area</label>
+      <select name="area" class="custom-select" id="validationDefault04" required>
+        <option selected disabled value="">Seleziona</option>
+        {% for area in aree %}
+        <option name="area" value="{{area.nome}}">{{area.nome|capfirst}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    
+  </div>
+  <br>
+  
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+        <button name="conferma-capoarea" class="btn btn-primary" type="submit">Conferma</button>
+      </div>
+    </div>
+  </div>
+</div>

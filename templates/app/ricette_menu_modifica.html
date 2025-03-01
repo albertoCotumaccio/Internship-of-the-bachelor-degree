@@ -1,0 +1,81 @@
+{% extends 'app/common.html' %}
+
+{% block title %}Settimana {{sett}} del {{year}}{% endblock %}
+
+
+{% load estrai %}
+{% load get_item %}
+
+
+{% block content %}
+
+
+
+<div class="container-fluid my-2 text-center">
+  
+  <h1>Menu Settimana {{sett}} del {{year}}</h1>
+    <hr width="100%" >
+
+   <form method="POST" action="">
+      {% csrf_token %}
+        
+
+<button type="submit" value="salva" name="salva" class="btn btn-success btn-lg">Aggiorna Menu</button>
+
+
+<br/><br/>
+
+
+
+{% for giorno,scelti in tagScelti.items %}
+<div class="card">
+
+      {% for giorno2,data in settimana.items %}
+         {% if giorno == giorno2 %}
+              <h5 class="card-header"><strong>{{giorno}} {{data}}</strong> </h5>
+          {% endif %}
+      {% endfor %}
+
+  <div class="card-body">
+            {% for tag in scelti %}
+              <div class="row mb-3 my-2">
+                <label class="col-sm-2 col-form-label" for="{{giorno}}-{{forloop.counter}}">{{tag.nome}}</label>
+                    <div class="col-sm-10">
+                        <select class="form-select form-select" id="{{giorno}}-{{forloop.counter}}" 
+                              name="{{giorno}}-{{forloop.counter}}" required>
+
+          
+
+                          <option value=""><i>{{conteggi|get_item:tag}} ricette disponibili</i></option>
+          
+                      
+
+                            {% for ricetta in ricette|get_item:tag %}
+                                    {% if ricetta.approvata %}
+                                        <option value="{{ricetta.nome}}" name="{{giorno}}-{{forloop.parentloop.counter}}" ><i>{{ricetta.nome}} ✔</i></option>
+                                    {% else %}
+                                        <option value="{{ricetta.nome}}" name="{{giorno}}-{{forloop.parentloop.counter}}" ><i>{{ricetta.nome}} ❌</i></option>
+                                    {% endif %}
+            
+                            {% endfor %}   
+                        </select>
+                      </div>
+             </div>
+              {% endfor %}
+        </div>
+
+
+</div>
+</br>
+{% endfor %}
+
+
+
+
+
+</form>
+
+
+</div>
+
+{% endblock %}

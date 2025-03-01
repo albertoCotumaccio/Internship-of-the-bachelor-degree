@@ -1,0 +1,58 @@
+{% load getRuoloUser %}
+{% load togliSpazi %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet"/>
+
+
+
+
+<table class="table"  id="table" data-toggle="table">
+  <thead class="table-light">
+    <tr>
+      <th scope="col" data-order='desc' data-sortable="true">Username</th>
+      <th scope="col"data-order='desc' data-sortable="true">Nome</th>
+      <th scope="col"data-order='desc' data-sortable="true">Cognome</th>
+      <th scope="col"data-order='desc' data-sortable="true">Email</th>
+      <th scope="col"data-order='desc' data-sortable="true">Ruolo</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for u in page_obj %}
+    <tr>
+      <td>{{u.username}}</td>
+      <td>{{u.first_name}}</td>
+        <td>{{u.last_name}}</td>
+        <td>{{u.email}}</td>
+        <td>{{u|getRuoloUser}}</td>
+        <td>
+          <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#{{u.username|togli_spazi}}-password">Cambia password</button>
+
+           <form method="POST" >
+             {% csrf_token %}
+                {% include 'app/partials/mod_elimina_utente.html' %}
+          </form>
+
+        </td>
+        <td>
+          <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#{{u.username|togli_spazi}}-elimina">Elimina</button>
+
+          <form method="POST" >
+             {% csrf_token %}
+              {% include 'app/partials/mod_cambia_password_utente.html' %}
+          </form>
+
+        </td>
+
+     
+    </tr>
+
+    {% endfor %}
+  </tbody>
+</table>
+
+
+

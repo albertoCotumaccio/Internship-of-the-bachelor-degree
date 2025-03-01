@@ -1,0 +1,144 @@
+{% extends 'app/common.html' %}
+
+{% block title %}Consulta ricette{% endblock %}
+
+
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet"/>
+
+
+ <datalist id="lista">
+    {% for ricetta in ricette %}
+      <option value="{{ ricetta.nome|capfirst}}">
+    {% endfor %}
+  </datalist>
+
+
+
+<div class="container-fluid my-2 text-center">
+  
+
+  <form method="POST">
+   {% csrf_token %}
+
+    <h1>Consulta Ricette</h1>
+    <hr>
+
+
+     
+ 
+
+
+
+<div class="row">
+
+  <div class="col-sm-6">
+    <h3 align="center"><b>Ricerca per nome </b></h3>
+    <br>
+<div class="input-group mb-3">
+  <input type="text" list="lista" name="ricerca_per_nome" class="form-control" Placeholder="Cerca una ricetta per nome...">
+  <div class="input-group-append">
+    <button type="submit" value="cerca" name="cerca" class="btn btn-primary">Cerca {% include 'app/partials/icone/_lente.html' %}</button>
+  </div>
+</div>
+  </div>
+
+  <div class="col-sm-6">
+    <h3 align="center"><b>Ricerca filtrata</b></h3>
+    <br>
+
+    <div class="input-group mb-3">
+      <label class="input-group-text" for="inputGroupSelect01"><strong>Portata</strong></label>
+      <select class="form-select" name="portata">
+        <option selected value="" name="portata">Tutte</option>
+        {% for portata in portate %}
+        <option name="portata" value="{{portata.nome}}">{{portata.nome|capfirst}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+
+<div class="input-group mb-3">
+  <label class="input-group-text" for="inputGroupSelect01"><strong>Tag</strong></label>
+  <select class="form-select" name="tag">
+    <option selected value="" name="tag">Tutti</option>
+    {% for tag in tags %}
+    <option name="tag" value="{{tag.nome}}">{{tag.nome|capfirst}}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<div class="input-group mb-3">
+  <label class="input-group-text" for="inputGroupSelect01"><strong>Impianto</strong></label>
+  <select class="form-select" name="impianto">
+    <option selected value="" name="impianto">Tutti</option>
+    {% for impianto in impianti %}
+    <option name="impianto" value="{{impianto.nome}}">{{impianto.nome|capfirst}} - {{impianto.area.nome|capfirst}}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<div class="d-grid gap-2 col-6 mx-auto">
+  <button type="submit" value="filtro" name="filtro" class="btn btn-primary">Cerca {% include 'app/partials/icone/_lente.html' %}</button>
+</div>
+
+  </div>
+
+</div>
+
+
+<br>
+<br>
+
+
+
+
+
+<br/>
+
+
+<h3 align="center"><b>Risultati</b> 
+  <span class="badge badge-pill badge-primary">{{count}}</span>
+</h3>
+<br/>
+
+<table class="table"  id="table" data-toggle="table">
+  <thead class="table-light">
+    <tr>
+      <th scope="col" data-order='desc' data-sortable="true">Nome</th>
+      <th scope="col" data-order='desc' data-sortable="true">Tag</th>
+      <th scope="col" data-order='desc' data-sortable="true">Portata</th>
+      <th scope="col" data-order='desc' data-sortable="true">Chef</th>
+      <th scope="col" data-order='desc' data-sortable="true">Impianto</th>
+      <th scope="col" data-order='desc' data-sortable="true">Approvata</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ricetta in ricetteFiltro %}
+    <tr>
+      <td><a href="{% url 'pivot' ricetta.nome %}">{{ricetta.nome|capfirst}}</a></td>
+      <td>{{ricetta.tag}}</td>
+      <td>{{ricetta.portata}}</td>
+      <td>{{ricetta.chef}}</td>
+      <td>{{ricetta.chef.impianto}}</td>
+      <td>
+       {% if ricetta.approvata%}
+        {% include 'app/partials/icone/_approvata.html' %}
+      {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+</form>
+
+</div>
+
+
+{% endblock %}
+

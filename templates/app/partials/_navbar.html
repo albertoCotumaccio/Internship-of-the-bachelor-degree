@@ -1,0 +1,65 @@
+{% load getImpiantiTab %}
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #469f35;">
+  <a class="navbar-brand" href="{% url 'index' %}"> {% include 'app/partials/icone/_home.html' %}
+  </a>
+
+
+{% if request.path != "/" %}
+  <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-outline-dark" class>{% include 'app/partials/icone/_back.html' %} Indietro </a>
+{% endif %}
+  
+  
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        {% for area,impianti in request.user|getImpiantiTab %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{area.nome|capfirst}}
+            </a>
+           
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                 {% for imp in impianti %}
+              <a class="dropdown-item" 
+                href="{{ imp.get_absolute_url }}">{{imp.nome|capfirst}}</a>
+                {% endfor %}
+            </div>
+          </li>
+          {% endfor %}
+      </li>
+      <li class="nav-item">
+            <a class="nav-link" href="{% url 'nuovaricetta' %}">Nuova ricetta</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'consultaricette' %}">Cerca una ricetta</a>
+          </li>
+
+      {% if request.user.is_staff %}
+           <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Amministrazione
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="nav-link" href="{% url 'approvaricetta' %}">Approva ricette</a>
+              <a class="nav-link" href="{% url 'utenti' %}">Gestione utenti</a>
+              <a class="nav-link" href="{% url 'gestione-impianti-aree' %}">Gestione impianti ed aree</a>
+              <a class="nav-link" href="{% url 'fornitori' %}">Gestione fornitori</a>
+               <a class="nav-link" href="{% url 'ingredienti' %}">Gestione ingredienti</a>
+            </div>
+          </li>
+          
+          {% endif %}
+
+    </ul>
+
+    <form class="form-inline my-2 my-lg-0">
+      <h3>{{user.username}}</h3>
+       <a href= "{% url 'logout' %}" type="button" class="btn btn-danger my-2 ml-3 my-sm-0" type="submit">Logout</a>
+    </form>
+  </div>
+</nav>

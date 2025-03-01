@@ -1,0 +1,178 @@
+{% extends 'app/common.html' %}
+
+{% block title %}Modifica ricetta: {{ricetta.nome|capfirst}} {% endblock %}
+
+{% load togliSpazi %}
+
+{% block content %}
+
+<div class="container-fluid my-2 text-center">
+
+
+
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <h1>Modifica ricetta: {{ricetta.nome|capfirst}}</h1>
+
+
+  <hr width="100%" >
+
+  {% if ricetta.foto %}
+  <button type="submit" name="eliminaFoto" class="btn btn-link">Elimina foto esistente</button>
+   <br/>
+  {% endif %}
+ 
+  
+ <br/>
+
+<div class="row mb-3 my-2 justify-content-center">
+      <label for="portata" class="col-sm-2 col-form-label"><strong>Nuova portata</strong></label>
+    <div class="col-sm-8">
+  <select size="{{portate|length}}" class="form-select" id="portata" name="portata" aria-label="portata" required onChange="window.location.href=this.value">
+     {% for portata in portate %}
+      {% if portata.nome == filtro %}
+        <option selected value="{{portata.nome}}" name="portata" >{{portata.nome}}</option>
+      {% else %}
+        <option value="{{portata.nome}}" name="portata" >{{portata.nome}}</option>
+      {% endif %}
+    {% endfor %}
+  </select>
+</div>
+ </div>
+
+
+
+ {% if sonoManager or request.user.is_staff %}
+        <div class="row mb-3 my-2 justify-content-center">
+      <label for="chef" class="col-sm-2 col-form-label"><strong>Assegna chef</strong></label>
+    <div class="col-sm-8">
+  <select class="form-select" id="chef" name="chef" aria-label="chef">
+    {% for chef in chefs %}
+        {% if chef == ricetta.chef %}
+            <option selected value="{{chef.user_id}}" id="chef" name="chef">{{chef}} - {{chef.impianto}}</option>
+        {% else %}
+            {% if chef == "" and not ricetta.chef %}
+                <option selected value="{{chef.user_id}}" name="chef" >-</option>
+            {% else %}
+                <option value="{{chef.user_id}}" name="chef" >{{chef}} - {{chef.impianto}}</option>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+  </select>
+</div>
+ </div>
+    {% else%}
+<div class="row mb-3 my-2 justify-content-center">
+      <label for="chef" class="col-sm-2 col-form-label"><strong>Chef</strong></label>
+    <div class="col-sm-8">
+  <input type="text" class="form-control" maxlength="100" name="chef" value="{{ricetta.chef}}" id="chef" readonly>
+</div>
+ </div>
+    {% endif %}
+    
+
+
+
+<div class="row mb-3 my-2 justify-content-center">
+      <label for="nome" class="col-sm-2 col-form-label"><strong>Nome ricetta</strong></label>
+    <div class="col-sm-8">
+  <input type="text" class="form-control" maxlength="100" id="nome" name="nome" value="{{ ricetta.nome }}" readonly>
+</div>
+ </div>
+
+
+
+
+<div class="row mb-3 my-2 justify-content-center">
+      <label for="tag" class="col-sm-2 col-form-label"><strong>Nuovo tag</strong></label>
+    <div class="col-sm-8">
+  <select class="form-select" aria-label="Default select example" id="tag" name="tag" required>
+  {% for tag in tags %}
+    {% if ricetta.tag == tag %}
+        <option selected value="{{tag.nome}}" name="tag" >{{tag.nome}}</option>
+    {% else %}
+        <option value="{{tag.nome}}" name="tag" >{{tag.nome}}</option> 
+    {% endif %} 
+  {% endfor %}
+  </select>
+</div>
+ </div>
+
+
+<div class="row mb-3 my-2 justify-content-center">
+      <label for="image" class="col-sm-2 col-form-label"><strong>Aggiorna foto</strong></label>
+    <div class="col-sm-8">
+  <input class="form-control" type="file" name="image" id="image">
+</div>
+ </div>
+
+
+
+</br>
+
+{% if ricetta.ingredienti.all %}
+<div class="row justify-content-center">
+        <div class="col"> 
+<b>Gestisci le quantità degli ingredienti della ricetta</b>
+
+</div>
+</div>
+
+<br>
+{% endif %}
+
+
+
+  {% for ing, q in ingredienti.items %}
+
+
+<div class="row justify-content-center">
+    <div class="col-md-2"> 
+
+            <label for="{{ing.nome_generico}}" class="col-form-label"> {{ing.nome_generico|capfirst}} </label>
+         
+      
+    </div>
+    <div class="col-md-2">              
+        <div class="input-group mb-3">
+            <input type="number" value="{{q}}" min="1" max="500" step="1" id="{{ing.nome_generico}}" class="form-control" name="{{ing.nome_generico}}-gr" required>
+            <span class="input-group-text">gr</span>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endfor %}
+
+ 
+</br>
+
+<div class="container">
+ <br/>
+  
+
+      <div class="d-grid gap-2 col-10 mx-auto">
+  <button type="submit" value="fatto" name="fatto" class="btn btn-primary btn-lg" 
+        style="background-color: #469f35; border-color: #469f35;">Salva modifiche</button>
+  <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#{{ ricetta.nome|togli_spazi }}-elimina">{% include 'app/partials/icone/_cestino.html' %} Elimina ricetta</button>
+  </br>
+  </br>
+</div>
+</div>
+
+
+
+
+{% include 'app/partials/mod_elimina_ricetta.html' %}
+
+
+
+</form>
+
+</div>
+
+{% endblock %}
+

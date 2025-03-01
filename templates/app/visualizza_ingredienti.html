@@ -1,0 +1,153 @@
+{% extends 'app/common.html' %}
+
+{% block title %}Gestione ingredienti{% endblock %}
+
+
+{% load togliSpazi %}
+{% load estrai %}
+
+
+{% block content %}
+
+
+
+
+
+
+
+
+
+<div class="container-fluid my-2 text-center">
+
+  <h1>Gestione ingredienti
+    <br>
+    <h4><span class="badge bg-info">{{count}} risultati</span></h4> 
+  </h1>
+
+  
+  <hr color="#469f35" width="100%" >
+
+
+
+ <div class="d-grid gap-2 d-md-flex justify-content-center" >
+
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#nuovo-ingrediente">
+      {% include 'app/partials/icone/_plus.html' %} Nuovo ingrediente
+    </button>
+</div>
+
+
+
+
+
+<form method="POST" >
+  {% csrf_token %}
+
+{% include 'app/partials/mod_nuovo_ingrediente.html' %}
+
+</form>
+
+
+
+
+
+<form method="POST" >
+  {% csrf_token %}
+
+<div class="input-group justify-content-end">
+    {% if filtro %}
+        <input type="text" name="filtro" value="{{filtro}} "Placeholder="Inserisci una parola chiave..." 
+                style="width:250px;">
+    {% else %}
+      <input type="text" name="filtro" Placeholder="Inserisci una parola chiave..." 
+                style="width:250px;">
+    {% endif %}
+        <button type="submit" name="cerca" class="btn btn-secondary btn-sm">
+      Cerca {% include 'app/partials/icone/_lente.html' %}</button>
+</div>
+
+</form>
+
+
+
+
+
+<br>
+
+
+
+
+
+
+
+
+    {% include 'app/partials/_paginazione.html' %}
+
+
+
+
+{% load togliSpazi %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet"/>
+
+
+ <form method="POST" >
+  {% csrf_token %}
+    <div class="mx-auto justify-content-center mt-3">
+        <button type="submit" value="salva" name="salva" class="btn btn-success mt-7">
+       <b>Salva modifiche  {% include 'app/partials/icone/_save.html' %}</b></button>
+    </div>
+
+
+
+<br>
+
+<table class="table"  id="table" data-toggle="table">
+  <thead class="table-light">
+    <tr>
+      <th scope="col"data-order='desc' data-sortable="true">Nome</th>
+      <th scope="col"data-order='desc' data-sortable="true">Listino generale</th>
+      <th scope="col">Elimina</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ingrediente in page_obj %}
+    <tr>
+
+      <td> <a href="{% url 'visualizzaingrediente' ingrediente.nome_generico %}">{{ingrediente.nome_generico|capfirst}}</a></td>
+        </td>
+
+      <td>
+           <input type="number" min="0" step="0.01" max="500" value="{{ingrediente.listino}}"  id="{{ingrediente.nome_generico}}" name='{{ingrediente.nome_generico}}-listino'> €
+      </td>
+</form>
+        <td>
+
+          <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#{{ingrediente.nome_generico|togli_spazi}}-elimina">Elimina</button>
+
+          <form method="POST" >
+             {% csrf_token %}
+              {% include 'app/partials/mod_elimina_ingrediente.html' %}
+          </form>
+
+        </td>
+
+     
+    </tr>
+
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+
+
+
+</div>
+
+
+{% endblock %}
+

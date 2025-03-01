@@ -1,0 +1,63 @@
+{% extends 'app/common.html' %}
+
+{% block title %}Analisi piatti settimana {{sett}} del {{year}} {% endblock %}
+
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet"/>
+
+
+
+
+<div class="container-fluid my-1 text-center">
+  
+  <h1>Analisi piatti: Settimana {{sett}} del {{year}}</h1>
+    <hr width="100%" >
+
+
+
+ <form method="POST" action="">
+      {% csrf_token %}
+
+    <div class="col-4 mx-auto">
+      <a href="{% url 'analisi-piatti' year impianto.nome sett %}" class="btn btn-outline-info">{% include 'app/partials/icone/_back.html' %} Esegui una nuova analisi dei piatti
+      </a>
+    </div>
+
+    <br>
+
+  <h5 align="left"><p>{% include 'app/partials/icone/_info_square.html' %} Portate Selezionate : {{portateSelezionate}}</p></h5>
+  <h5 align="left"><p>{% include 'app/partials/icone/_info_square.html' %} Tag Selezionati : {{tagsSelezionati}}</p></h5>
+
+
+<table class="table table-hover" id="table" data-toggle="table">
+  <thead class="table-light">
+    <tr>
+      <th scope="col" data-order='desc' data-sortable="true">Ricetta</th>
+      <th scope="col" data-order='desc' data-sortable="true">Portata</th>
+      <th scope="col" data-order='desc' data-sortable="true">Tag</th>
+      <th scope="col" data-order='desc' data-sortable="true">Frequenza</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ricetta,n in conteggi.items %}
+      <tr>
+        <td>{{ricetta.nome|capfirst}}</td>
+        <td>{{ricetta.portata.nome|capfirst}}</td>
+        <td>{{ricetta.tag.nome|capfirst}}</td>
+        <td>{{n}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+
+
+</form>
+
+</div>
+{% endblock %}

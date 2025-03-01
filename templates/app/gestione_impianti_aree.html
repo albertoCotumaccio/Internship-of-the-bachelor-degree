@@ -1,0 +1,172 @@
+{% extends 'app/common.html' %}
+
+
+{% block title %}Gestione impianti ed aree{% endblock %}
+
+{% load estrai %}
+
+{% load togliSpazi %}
+
+{% block content %}
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet"/>
+
+
+
+<div class="container-fluid my-2 text-center">
+
+  <h1>Gestione impianti ed aree</h1>
+  <hr width="100%" >
+
+
+
+
+<div class="d-grid gap-2 d-md-flex justify-content-center" >
+
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#nuovo-impianto">
+      {% include 'app/partials/icone/_plus.html' %} Nuovo impianto
+    </button>
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#nuova-area">
+     {% include 'app/partials/icone/_plus.html' %} Nuova area
+    </button>
+
+</div>
+
+
+
+<form method="POST" >
+  {% csrf_token %}
+
+{% include 'app/partials/mod_nuovo_impianto.html' %}
+
+
+</form>
+
+
+
+<form method="POST" >
+  {% csrf_token %}
+
+{% include 'app/partials/mod_nuova_area.html' %}
+
+</form>
+
+
+
+<br>
+<br>
+
+
+
+<table class="table"  id="table" data-toggle="table">
+  <thead class="table-light">
+    <tr>
+      <th scope="col" data-order='desc' data-sortable="true">Area  
+            <span class="badge bg-info">{{totAree}}</span>
+      </th>
+      <th scope="col"data-order='desc' data-sortable="true">Impianti e classificazione
+        <span class="badge bg-info">{{totImpianti}}</span>
+      </th>
+      <th scope="col"data-order='desc' data-sortable="true">CapoArea</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for area,utenti in diz.items %}
+       
+    <tr>
+
+
+      <td>{{area.nome|capfirst}}</td>
+
+      <td>
+        {% for impianto in areaImpianti|estrai:area %}
+          <a href="{{ impianto.get_absolute_url }}">{{impianto.nome|capfirst}} - {{impianto.classificazione}}</a>
+
+            {% if forloop.counter != forloop.last %}
+              <br><br>
+            {% endif %}
+
+        {% endfor %}
+      </td>
+
+      <td>
+              <form method="POST" >
+             {% csrf_token %}
+
+          <div class="input-group mb-3">
+
+              {% if area.capo %}
+                <select class="form-select form-select" name="{{area}}">
+                    <option selected></option>
+                      {% for utenteArea in utenti %}
+                        {% if area.capo == utenteArea %}
+                          <option selected for="{{area}}" value="{{utenteArea}}">{{utenteArea.user.username|capfirst}} </option>
+                        {% else %}
+                         <option for="{{area}}" value="{{utenteArea}}">{{utenteArea.user.username|capfirst}} </option>
+                        {% endif %}
+                      {% endfor %}
+                  </select>
+
+              {% else %}
+               <select class="form-select form-select" name="{{area}}">
+                <option selected></option>
+                    {% for utenteArea in utenti %}
+                      <option for="{{area}}" value="{{utenteArea}}">{{utenteArea}}</option>
+                    {% endfor %}
+                </select>
+             {% endif %}
+
+            <button type="submit" class="btn btn-outline-dark btn-sm" value="{{area.nome}}" name="aggiorna">  Aggiorna</button>
+
+         </div>
+
+         </form>
+
+       
+      </td>
+
+      <td>
+         <form method="POST" >
+             {% csrf_token %}
+        
+              {% include 'app/partials/mod_elimina_area.html' %}
+          </form>
+
+
+         <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#{{ area.nome|togli_spazi }}-elimina">Elimina</button>
+
+          
+
+      </td>
+
+  
+    </tr>
+     
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+{% endblock %}

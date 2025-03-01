@@ -1,0 +1,110 @@
+{% extends 'app/common.html' %}
+
+{% block title %}Gestione fornitori{% endblock %}
+
+
+{% load togliSpazi %}
+
+
+
+{% block content %}
+
+
+
+
+
+
+
+
+
+<div class="container-fluid my-2 text-center">
+
+  <h1>Gestione fornitori
+    <br>
+    <h4><span class="badge bg-info">{{count}} risultati</span></h4> 
+  </h1>
+
+  
+  <hr color="#469f35" width="100%" >
+
+
+
+ <div class="d-grid gap-2 d-md-flex justify-content-center" >
+
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#nuovo-fornitore">
+      {% include 'app/partials/icone/_plus.html' %} Nuovo fornitore
+    </button>
+</div>
+
+
+
+<form method="POST" >
+  {% csrf_token %}
+
+{% include 'app/partials/mod_nuovo_fornitore.html' %}
+
+</form>
+
+
+
+<br>
+
+
+
+
+
+
+
+
+    {% include 'app/partials/_paginazione.html' %}
+
+
+
+
+{% load togliSpazi %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet"/>
+
+
+
+
+<table class="table"  id="table" data-toggle="table">
+  <thead class="table-light">
+    <tr>
+      <th scope="col"data-order='desc' data-sortable="true">Nome</th>
+      <th scope="col">Elimina</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for fornitore in page_obj %}
+    <tr>
+      <td>{{fornitore.nome|capfirst}}</td>
+        <td>
+          <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#{{fornitore.nome|togli_spazi}}-elimina">Elimina</button>
+
+          <form method="POST" >
+             {% csrf_token %}
+              {% include 'app/partials/mod_elimina_fornitore.html' %}
+          </form>
+
+        </td>
+
+     
+    </tr>
+
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+
+
+
+</div>
+
+
+{% endblock %}
+

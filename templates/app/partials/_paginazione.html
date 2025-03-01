@@ -1,0 +1,33 @@
+
+
+<nav aria-label="Page navigation" class="table-responsive mb-2">
+   <ul class="pagination mb-0">
+
+        {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo; Prima</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Precedente</a></li>
+        
+        {% endif %}
+
+        {% for i in nums %}
+          {% if forloop.counter == page_obj.number %}
+          <li class="page-item active" aria-current="page">
+      <a class="page-link" href="#">{{forloop.counter}}</a>
+    </li>
+      {% else %}
+          <li class="page-item"> <a href="?page={{ forloop.counter }}" class="page-link">{{ forloop.counter }}</a> </li>
+
+        {% endif %}
+          
+        {% endfor %}
+
+
+        {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Prossima</a></li>
+           <li class="page-item"> <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Ultima &raquo;</a></li>
+        
+        {% endif %}
+        
+ 
+  </ul>
+</nav>

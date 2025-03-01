@@ -1,0 +1,188 @@
+{% extends 'app/common.html' %}
+
+{% block title %}Analisi ingredienti settimana {{sett}} del {{year}} {% endblock %}
+
+{% block content %}
+
+
+{% load estrai %}
+
+<div class="container-fluid my-2 text-center">
+  
+  <h1>Analisi ingredienti: Settimana {{sett}} del {{year}}</h1>
+
+
+  <span style="color:red">Verrà eseguita un'analisi degli ingredienti dal {{estremoSx}} al {{estremoDx}}</span>
+
+  
+    <hr width="100%" >
+
+
+
+ <form method="POST" action="">
+      {% csrf_token %}
+
+
+
+
+
+<div class="container-fluid text-center">
+  <div class="row">
+    <div class="col-md-4">      
+         <table class="table table-sm">
+            <thead>
+              <h3><b>Portata</b></h3>
+               <tr>
+                  <th scope="col">
+                      <button type="button" value="selectAll" class="btn btn-outline-primary btn-sm" onclick="tuttePortate()">Seleziona tutte</button>
+                      <button type="button" value="deselectAll" class="btn btn-outline-danger btn-sm" onclick="clearPortate()">Clear</button>
+                  </th>
+               </tr>
+            </thead>
+            <tbody class="text-left">
+              {% for portata in portate %}
+               <tr>
+                  <td><input type="checkbox" id="{{portata.nome}}" value="{{portata.nome}}" name="portate"> 
+                    <label for="{{portata.nome}}">{{portata.nome}}</label></td>
+               </tr>
+              {% endfor %}
+            </tbody>
+         </table>
+
+
+        <script type="text/javascript">
+         // Select all check boxes : Setting the checked property to true in checkAll() function
+           function tuttePortate(){
+             var items = document.getElementsByName('portate');
+               for (var i = 0; i < items.length; i++) {
+                   if (items[i].type == 'checkbox')
+                       items[i].checked = true;
+               }
+           }
+         // Clear all check boxes : Setting the checked property to false in uncheckAll() function
+           function clearPortate(){
+             var items = document.getElementsByName('portate');
+               for (var i = 0; i < items.length; i++) {
+                   if (items[i].type == 'checkbox')
+                       items[i].checked = false;
+               }
+           }
+        </script>
+    </div>
+
+    <div class="col-md-4">      
+         <table class="table table-sm">
+            <thead >
+                <h3><b>Tag</b></h3>
+               <tr>
+                  <th scope="col">  
+                      <button type="button" value="selectAll" class="btn btn-outline-primary btn-sm" onclick="tuttiTags()">Seleziona tutti</button>
+                      <button type="button" value="deselectAll" class="btn btn-outline-danger btn-sm" onclick="clearTags()">Clear</button>
+                  </th>
+               </tr>
+            </thead>
+            <tbody class="text-left">
+              {% for tag in tags %}
+               <tr>
+                  <td><input type="checkbox" id="{{tag.nome}}-tag" value="{{tag.nome}}" name="tags"> 
+                    <label for="{{tag.nome}}-tag">{{tag.nome}}</label></td>
+               </tr>
+              {% endfor %}
+            </tbody>
+         </table>
+         
+
+
+        <script type="text/javascript">
+         // Select all check boxes : Setting the checked property to true in checkAll() function
+           function tuttiTags(){
+             var items = document.getElementsByName('tags');
+               for (var i = 0; i < items.length; i++) {
+                   if (items[i].type == 'checkbox')
+                       items[i].checked = true;
+               }
+           }
+         // Clear all check boxes : Setting the checked property to false in uncheckAll() function
+           function clearTags(){
+             var items = document.getElementsByName('tags');
+               for (var i = 0; i < items.length; i++) {
+                   if (items[i].type == 'checkbox')
+                       items[i].checked = false;
+               }
+           }
+        </script>
+    </div>
+
+<div class="col-md-4">      
+         <table class="table table-sm">
+            <thead >
+                <h3><b>Natura ingrediente</b></h3>
+               <tr>
+                  <th scope="col">  
+                      <button type="button" value="selectAll" class="btn btn-outline-primary btn-sm" onclick="tutteNature()">Seleziona tutte</button>
+                      <button type="button" value="deselectAll" class="btn btn-outline-danger btn-sm" onclick="clearNature()">Clear</button>
+                  </th>
+               </tr>
+            </thead>
+            <tbody class="text-left">
+              {% for natura in nature %}
+               <tr>
+                  <td><input type="checkbox" id="{{natura}}" value="{{natura}}" name="nature"> 
+                    <label for="{{natura}}">{{natura}}</label></td>
+               </tr>
+              {% endfor %}
+            </tbody>
+         </table>
+         
+
+
+        <script type="text/javascript">
+         // Select all check boxes : Setting the checked property to true in checkAll() function
+           function tutteNature(){
+             var items = document.getElementsByName('nature');
+               for (var i = 0; i < items.length; i++) {
+                   if (items[i].type == 'checkbox')
+                       items[i].checked = true;
+               }
+           }
+         // Clear all check boxes : Setting the checked property to false in uncheckAll() function
+           function clearNature(){
+             var items = document.getElementsByName('nature');
+               for (var i = 0; i < items.length; i++) {
+                   if (items[i].type == 'checkbox')
+                       items[i].checked = false;
+               }
+           }
+        </script>
+    </div>
+    
+
+
+  </div>
+</div>
+
+
+
+
+<br>
+
+<div class="d-grid gap-2 col-6 mx-auto">
+ <button type="submit" value="esegui" name="esegui"class="btn btn-success">Esegui analisi degli ingredienti</button>
+</div>
+
+
+
+
+<br>
+<br>
+
+
+
+
+
+
+
+</form>
+
+</div>
+{% endblock %}

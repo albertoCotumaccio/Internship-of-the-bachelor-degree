@@ -1,0 +1,142 @@
+{% extends 'app/common.html' %}
+
+{% block title %}Modifica menu: settimana {{sett}} del {{year}} - {{impianto.nome|capfirst}} {% endblock %}
+
+
+{% block content %}
+
+
+
+{% load estrai %}
+
+<div class="container-fluid my-2 text-center">
+  
+  <h1>Edit: <a class="link-dark" href="{% url 'settimane' year impianto.nome sett %}">Settimana {{sett}} del {{year}} - {{impianto.nome|capfirst}}</a></h1>
+    <hr width="100%" >
+
+
+
+
+
+
+{% if aggiunta == False %}
+
+
+  <form method="POST" action="">
+      {% csrf_token %}
+        {% include 'app/partials/mod_aggiunta_ricette_menu.html' %}
+      </form>
+
+
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#nuove-ricette">
+     {% include 'app/partials/icone/_plus.html' %}
+  Aggiungi nuove ricette
+    </button>
+
+     
+</br></br>
+
+
+
+  <form method="POST" action="">
+      {% csrf_token %}
+      
+  <button class="btn btn-danger"  type="submit" name="elimina">
+     {% include 'app/partials/icone/_cestino.html' %}
+        Elimina ricette selezionate</button>
+
+
+  
+
+  </br></br>
+
+{% for giorno,ricette in ricetteSettimana.items %}
+  <div class="card text-center">
+    {% for giorno2,data in settimana.items %}
+      {% if giorno == giorno2 %}
+         <h5 class="card-header"><strong>{{giorno}} {{data}}</strong> </h5>
+      {% endif %}
+    {% endfor %}
+
+
+
+    <div class="card-body">
+      <ul class="list-group list-group-flush">
+        {% for ricetta in ricette %}
+
+          <li class="list-group-item" align="left">            
+            <input class="form-check-input" type="checkbox" value="{{giorno}}-{{ricetta.nome}}" id="{{giorno}}{{ricetta.nome}}" name="cancella">
+              <label for="{{giorno}}{{ricetta.nome}}"><strong>{{ricetta.tag}}:</strong> {{ricetta.nome}}</label>
+              
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+</br>
+{% endfor %}
+
+</form>
+
+
+
+
+
+
+
+
+{% else %}
+
+  <h4>Componi il menu selezionando i tag desiderati</h4>
+
+
+  <form method="POST" action="">
+      {% csrf_token %}
+
+<button type="submit" value="avanti" name="avanti" class="btn btn-success btn-lg">Avanti</button>
+
+</br>
+</br>
+
+{%for giorno,ricette in ricetteSettimana.items %}
+  <div class="card">
+    {% for giorno2,data in settimana.items %}
+        {% if giorno == giorno2 %}
+            <h5 class="card-header"><strong>{{giorno}} {{data}}</strong> </h5>
+        {% endif %}
+     {% endfor %}
+
+    <div class="card-body">
+        {% for ricetta in ricette %}
+          <select class="form-select form-select">
+           <option selected disabled>{{ricetta.tag}}: {{ricetta.nome}}</option>
+          </select>
+        {% endfor %}
+      
+    </br>
+
+      {% for t in tagIndici|estrai:giorno %}
+         <select class="form-select form-select" id="{{forloop.counter}}{{giorno}}" name="{{forloop.counter}}{{giorno}}">
+              <option value="" selected><i>-------</i></option>
+        {% for tag in tags %}
+            <option value="{{tag.nome}}" name="{{forloop.counter}}{{giorno}}">{{tag.nome|capfirst}}</option>
+        {% endfor %}
+        </select>
+      {% endfor %}
+ 
+  </div>
+
+</div>
+</br>
+{% endfor %}
+
+
+{% endif %}
+ 
+
+
+</form>
+
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'app/common.html' %}
+
+{% block title %}Ordine {{dateDay}} - {{impianto.nome}} {% endblock %}
+
+{% load estrai %}
+
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet"/>
+
+
+<div class="container-fluid my-2 text-center">
+  
+  <h1>Genera ordine: settimana {{sett}} {{impianto.nome}}</h1>
+    <hr width="100%" >
+
+
+{% for giorno in giorni %}
+ <p align="left">{% include 'app/partials/icone/_info_square.html' %} {{giorno}} {{settimana|estrai:giorno}} </p>
+{% endfor %}
+
+
+
+   <form method="POST" action="">
+      {% csrf_token %}
+
+
+
+<table class="table"  id="table" data-toggle="table">
+  <thead>
+    <tr>
+      <th scope="col" data-order='desc' data-sortable="true">Tag</th>
+      <th scope="col" data-order='desc' data-sortable="true">Ricetta</th>
+      <th scope="col">Porzioni</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for ricetta in ricetteGiorni %}
+      <td><label for="{{ricetta.nome}}">{{ricetta.tag}}</label></td>
+      <td scope="row"><label for="{{ricetta.nome}}">{{ricetta.nome}}</label></td>
+      <td><input type="number" min="{{conteggi|estrai:ricetta}}" step="1" max="500" value="{{conteggi|estrai:ricetta}}"  id="{{ricetta.nome}}" name='{{ricetta.nome}}' required></td>
+    </tr>
+     {% endfor %}
+  </tbody>
+</table>
+
+<br>
+<div class="d-grid gap-2 col-6 mx-auto">
+ <button type="submit" value="genera" name="genera" class="btn btn-success">Genera ordine</button>
+
+ <select name="fornitore" class="form-select" aria-label="Default select example">
+  <option selected value="" name="fornitore">Tutti i fornitori</option>
+  {% for fornitore in fornitori %}
+  <option name="fornitore" value="{{fornitore.nome}}">{{fornitore.nome|capfirst}}</option>
+  {% endfor %}
+</select>
+
+</div>
+
+
+<br>
+<br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</form>
+
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+from django.urls import path,re_path
+from . import views
+
+
+urlpatterns = [
+    path(r'', views.index, name="index"),
+    path('nuovaricetta/', views.nuovaRicetta, name="nuovaricetta"),
+    path('listino/<str:pk>/<str:filtro>', views.listinoImpianto, name="listinoimpianto-filtro"),
+    path('listino/<str:pk>/', views.listinoImpianto, name="listinoimpianto"),
+    path('amministrazione/ingredienti/<str:filtro>', views.visualizzaIngredienti, name="ingredienti-filtro"),
+    path('amministrazione/ingredienti', views.visualizzaIngredienti, name="ingredienti"),
+    path('amministrazione/fornitori', views.visualizzaFornitori, name="fornitori"),
+    path('amministrazione/utenti', views.visualizzaUtenti, name="utenti"),
+    path('amministrazione/utenti/chefs', views.visualizzaUtentiChefs, name="utenti-chefs"),
+    path('amministrazione/utenti/chefs/<str:pk>', views.visualizzaUtentiChefsImpianto, name="utenti-chefs-impianto"),
+    path('amministrazione/utenti/direzionali', views.visualizzaUtentiDirezionali, name="utenti-direzionali"),
+    path('amministrazione/utenti/capoarea', views.visualizzaUtentiCapoarea, name="utenti-capoarea"),
+    path('amministrazione/approva/<str:filtro>', views.approvaRicetta, name="approvaricetta-filtro"),
+    path('amministrazione/approva', views.approvaRicetta, name="approvaricetta"),
+    path('amministrazione/ingrediente/<str:nome>', views.visualizzaIngrediente, name="visualizzaingrediente"),
+    path('amministrazione/gestione-impianti-aree', views.gestioneImpiantiAree, name="gestione-impianti-aree"),
+    path('nuovaricetta/<str:filtro>', views.nuovaRicetta, name="nuovaricetta-portata"),
+    path('consulta/', views.consultaRicette, name="consultaricette"),
+    path('consulta/<str:pk>/<str:imp>', views.pivot, name="pivot-imp"),
+    path('consulta/<str:pk>/', views.pivot, name="pivot"),
+    path('consulta/<str:pk>/edit/<str:filtro>', views.modificaRicetta, name="modificaricetta"),
+    path('consulta/<str:pk>/duplica/<str:filtro>', views.duplicaRicetta, name="duplicaricetta"),
+    path('menu/<int:year>/<str:pk>/settimana<int:sett>/pdf_download_settimana', views.DownloadPDFSettimana.as_view(), name="pdf_download_settimana"),
+    path('menu/<int:year>/<str:pk>/settimana<int:sett>/pdf_download_settimana_ricettario', views.DownloadPDFSettimanaRicettario.as_view(), name="pdf_download_settimana_ricettario"),
+    path('menu/<int:year>/<str:pk>/settimana<int:sett>/pdf_download_<str:day>', views.DownloadPDFGiorno.as_view(), name="pdf_download_giorno"),
+    path('menu/<int:year>/<str:pk>/settimana<int:sett>', views.visualizzaSettimana, name="settimane"),
+    path('menu/<int:year>/<str:pk>/<str:month>', views.visualizzaImpianto, name="impianto-mese"),
+    path('menu/<int:year>/<str:pk>/', views.visualizzaImpianto, name="impianto"),
+    path('menu/<int:year>/<str:pk>/settimana<int:sett>/edit', views.modificaMenu, name="modificamenu"),
+    path('menu/<int:year>/<str:pk>/settimana<int:sett>/analisi/ingredienti', views.analisiIngredienti, name="analisi-ingredienti"),
+    path('menu/<int:year>/<str:pk>/settimana<int:sett>/analisi/piatti', views.analisiPiatti, name="analisi-piatti"),
+    path('menu/<int:year>/<str:pk>/settimana<int:sett>/ordine/<str:days>', views.generaOrdine, name="generaordine"),
+]

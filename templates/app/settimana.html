@@ -1,0 +1,69 @@
+{% extends 'app/common.html' %}
+
+
+{% block title %}Settimana {{sett}} del {{year}} - {{impianto.nome}}{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container-fluid my-2 text-center">
+
+   <form method="POST" action="">
+      {% csrf_token %}
+
+
+  <h1><a class="link-dark" href="{% url 'impianto' year impianto.nome %}"> {{impianto.nome|capfirst}}</a> : Settimana {{sett}} del {{year}}
+
+    {% if vedoBottoneEdit %}
+      <a href= "{% url 'modificamenu' year impianto.nome sett %}" type="button" class="btn btn-secondary my-3">{% include 'app/partials/icone/_matita.html' %} Modifica</a>
+    {% endif %}
+ 
+
+
+</h1>
+
+
+
+  <div class="d-grid gap-2 col-3 mx-auto">
+   {% if vedoBottone %}
+      <button type="submit" value="approva" name="approva" class="btn btn-outline-success">Approva</button>
+    {% endif %}
+  </div>
+
+
+<br>
+ 
+
+
+    <hr style="margin: auto;" >
+    
+    <br> 
+
+
+{% if not esisteMenu %}
+  
+  {% include 'app/partials/settimana_crea_menu.html' %}
+
+
+
+{% else %}
+
+{% include 'app/partials/settimana_visualizza_menu.html' %}
+
+
+
+{% endif %}
+
+
+
+  
+
+
+
+  </form>
+
+
+
+</div>
+{% endblock %}

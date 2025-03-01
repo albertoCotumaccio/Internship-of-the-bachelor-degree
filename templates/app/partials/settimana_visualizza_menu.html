@@ -1,0 +1,231 @@
+{% load toListOrdinata %}
+{% load getApprovatore %}
+{% load newline %}
+{% load estrai %}
+
+
+<style type="text/css">
+        .btn-circle.btn-sm {
+            width: 30px;
+            height: 30px;
+            padding: 6px 0px;
+            border-radius: 15px;
+            font-size: 8px;
+            text-align: center;
+        }
+    </style>
+
+
+<br>
+
+  {% if costi == False and allergeni == False %}
+    <nav aria-label="...">
+      <ul class="nav justify-content-center">
+        <li class="page-item active" aria-current="page">
+          <span class="page-link">Visualizza menu</span>
+        </li>
+        <li class="page-item">
+          <button value="VisualizzaCosti" name="VisualizzaCosti" class="page-link">Visualizza con costi</button>
+        </li>
+        <li class="page-item">
+          <button value="VisualizzaAllergeni" name="VisualizzaAllergeni" class="page-link">Visualizza con allergeni</button>
+        </li>
+      </ul>
+    </nav>
+  {% endif %}
+
+
+  {% if costi %}
+    <nav aria-label="...">
+      <ul class="nav justify-content-center">
+        <li class="page-item">
+          <button value="VisualizzaNormale" name="VisualizzaNormale" class="page-link">Visualizza menu</button>
+        </li>
+        <li class="page-item active" aria-current="page">
+          <span class="page-link">Visualizza con costi</span>
+        </li>
+        <li class="page-item">
+          <button value="VisualizzaAllergeni" name="VisualizzaAllergeni" class="page-link">Visualizza con allergeni</button>
+        </li>
+      </ul>
+    </nav>
+  </br>
+    <div style="text-align: left">
+     {% include 'app/partials/icone/_currency.html' %} Costo totale della settimana: {{costoSettimana}} €
+    </div>
+  {% endif %}
+
+
+  {% if allergeni %}
+    <nav aria-label="...">
+      <ul class="nav justify-content-center">
+        <li class="page-item">
+          <button value="VisualizzaNormale" name="VisualizzaNormale" class="page-link">Visualizza menu</button>
+        </li>
+         <li class="page-item">
+          <button value="VisualizzaCosti" name="VisualizzaCosti" class="page-link">Visualizza con costi</button>
+        </li>
+        <li class="page-item active" aria-current="page">
+          <span class="page-link">Visualizza con allergeni</span>
+        </li>
+      </ul>
+    </nav>
+  </br>
+    <div style="text-align: left">
+     {% include 'app/partials/icone/_warning.html' %} Allergeni: {{allergeniTotali}}
+    </div>
+ {% endif %}
+
+
+
+
+
+ <br/>
+ 
+<div class="row justify-content-center">
+
+<br/>
+    {% for menu in listaMenuSettimana %}
+        <div class="card" style="width: 16rem;">
+
+            <h4 class="card-header">
+
+               <button type="button" data-toggle="modal" data-target="#exampleModalCenter{{menu.giorno}}"class="btn btn-secondary btn-circle btn-sm position-relative">
+                {% include 'app/partials/icone/_info.html' %}
+
+                  {% if not menu.approvatore %}
+                      <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">new
+                      </span>
+                  {% endif %}
+
+              </button> 
+
+                          <br> 
+                <strong>{{menu.giorno}} {{settimana|estrai:menu.giorno }}</strong> 
+          
+                 
+
+<div class="row justify-content-center mt-2">
+
+  <div class="col-4 mt-1">
+ <a href="{% url 'pdf_download_giorno' year impianto.nome sett menu.giorno %}" class="btn btn-outline-dark btn-sm">{% include 'app/partials/icone/_stampa.html' %}</a>
+</div>
+
+<div class="col-8">
+
+<div class="input-group input-group">
+  <label align="left" for="{{menu.giorno}}-ordine" class="form-control"><b>Ordine</b></label> 
+    <div class="input-group-prepend">
+    <div class="input-group-text">
+      <input type="checkbox" value="{{menu.giorno}}" name="{{menu.giorno}}-ordine" id="{{menu.giorno}}-ordine">
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+  </div>     
+            </h4>
+
+
+
+              <!-- Modal -->
+                <div class="modal fade" id="exampleModalCenter{{menu.giorno}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">
+                     <strong style="color: red;">Storico delle modifiche: {{menu.giorno}} {{settimana|estrai:menu.giorno }}</strong></h5>
+                       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  </div>
+                  <div class="modal-body">
+                      {% for el in history|estrai:menu.giorno %}           
+                         <strong> 
+                         ({{el.version}}) {{el.user.first_name}} {{el.user.last_name}} - {{el.istante}}
+                          </strong> 
+                          {% for frase in el.text|newline %}
+                            <p align="left" style="margin:0" style="padding:0">•{{frase}} </p> 
+                            {% endfor %}
+                              <hr>
+                      {% endfor %}         
+
+
+                  </div>
+                  
+                </div>
+                </div>
+                </div>
+                  <!--FINE Modal -->
+
+
+
+            <ul class="list-group list-group-flush">
+                {% for ricetta in menu.ricette.all|toListOrdinata %}
+                  <li class="list-group-item">
+                    <strong>{{ricetta.tag}}</strong> 
+                    <a href="{% url 'pivot' ricetta.nome %}">{{ricetta.nome}}</a>
+
+                      {% if allergeni %}
+                        <br>
+                            {% for allergene in ricetteAllergeni|estrai:ricetta %}
+                              <small>{{allergene.nome}}</small>
+                              {% if allergene.foto %}
+                                <img src="{{allergene.foto.url}}" width="30" height="30" >
+                              {% endif %}
+                              <br>
+                            {% endfor %}
+
+                            {{calorie|estrai:ricetta}} calorie
+
+                      {% elif costi %}
+                        <br>
+                              {{ricetteCosti|estrai:ricetta }} €<br>
+                      {% endif %}
+
+                  </li>
+                {% endfor %}
+
+            {% if costi %}
+              <li class="list-group-item">
+                    <p style="color:red">
+                    <strong> Totale: {{costoGiorni|estrai:forloop.counter0  }} €</strong></p>
+                  </li>
+            {% endif %}
+            </ul>
+
+        </div>
+
+  <br/>
+  {% endfor %}
+  <br/>
+  <br/>
+
+</div>
+<br/>
+
+ 
+<div class="row"style="text-align: left">
+    <p>{% include 'app/partials/icone/_info_square.html' %} Creato da: {{ creatore }} | {{ creazione }}</p>
+    <p>{% include 'app/partials/icone/_info_square.html' %} Ultima modifica: {{ aggiornato }}</p>
+    <p>{% include 'app/partials/icone/_info_square.html' %} Approvatore: {{listaMenuSettimana|getApprovatore }}</p>
+</div>
+  
+
+
+<a href="{% url 'analisi-ingredienti' year impianto.nome sett %}" class="btn btn-warning">Analisi degli ingredienti</a>
+
+<a href="{% url 'analisi-piatti' year impianto.nome sett %}" class="btn btn-warning">Analisi dei piatti</a>
+
+<br><br>
+ <button name="genera-ordine" class="btn btn-secondary">Genera ordine</button>
+
+<br>
+<br>
+
+<a href="{% url 'pdf_download_settimana' year impianto.nome sett %}" class="btn btn-secondary">{% include 'app/partials/icone/_stampa.html' %} Stampa PDF</a>
+
+<a href="{% url 'pdf_download_settimana_ricettario' year impianto.nome sett %}" class="btn btn-secondary">{% include 'app/partials/icone/_stampa.html' %} Stampa PDF ricettario</a>
+
+<br/>
+<br/>

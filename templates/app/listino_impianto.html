@@ -1,0 +1,148 @@
+{% extends 'app/common.html' %}
+
+
+{% block title %}Listino prezzi {{impianto.nome}} {% endblock %}
+
+
+
+
+{% block content %}
+
+
+
+<form method="POST"  enctype="multipart/form-data" >
+  {% csrf_token %}
+
+
+<div class="container-fluid my-2 text-center">
+
+
+  <h1>Listino prezzi 
+    <a class="link-dark" href="{% url 'impianto' annoCorrente impianto.nome %}"> {{impianto.nome}}</a>
+  - {{impianto.area}} 
+  </h1>
+
+
+
+<button type="submit" name="scarica" class="btn btn-secondary btn"><b>Scarica file excel</b></button>
+<button type="button" data-toggle="modal" data-target="#modaleCaricaFile"class="btn btn-secondary btn"><b>Upload file</b></button>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modaleCaricaFile" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen-sm-down" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h3 class="modal-title w-100"><strong>Carica file excel</strong></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+          <div class="input-group">
+ <input class="form-control form-control" type="file" name="file" id="file">
+  <button class="btn btn-success" value="upload" name="upload" type="submit">Upload 
+          {% include 'app/partials/icone/_upload.html' %}</button>
+          
+          </div>
+
+
+      </div>
+      <div class="modal-footer">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</form>
+
+<hr>
+
+
+
+<form method="POST" >
+  {% csrf_token %}
+
+
+<div class="input-group justify-content-end">
+    {% if filtro %}
+        <input type="text" name="filtro" value="{{filtro}} "Placeholder="Inserisci una parola chiave..." 
+                style="width:250px;">
+    {% else %}
+      <input type="text" name="filtro" Placeholder="Inserisci una parola chiave..." 
+                style="width:250px;">
+    {% endif %}
+        <button type="submit" name="cerca" class="btn btn-secondary btn-sm">
+      <b>  Cerca</b> {% include 'app/partials/icone/_lente.html' %}</button>
+</div>
+
+
+<div class="mx-auto justify-content-center mt-3">
+    <button type="submit" value="salva" name="salva" class="btn btn-success mt-7">
+   <b>Salva modifiche  {% include 'app/partials/icone/_save.html' %}</b></button>
+</div>
+
+
+
+<br>
+
+
+{% include 'app/partials/_paginazione.html' %}
+
+
+<table class="table table-bordered">
+  <thead class="table-light">
+    <tr>
+      <th scope="col">Ingrediente</th>
+      <th scope="col">Prezzo al kg</th>
+      <th scope="col">Fornitore</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for obj in page_obj %}
+
+      <td>
+          <label for="{{obj.ingrediente.nome_generico}}">
+            <a href="{% url 'visualizzaingrediente' obj.ingrediente.nome_generico %}" class="dark-link">{{obj.ingrediente.nome_generico|capfirst}}</a></label>
+      </td>
+      <td>
+          <input type="number" min="0" step="0.01" max="500" value="{{obj.listino}}"  id="{{obj.ingrediente.nome_generico}}" name='{{obj.ingrediente.nome_generico}}'> €
+      </td>
+      <td>
+          <select class="form-select form-select-sm" name="{{obj.ingrediente.nome_generico}}-fornitore">
+              <option selected></option>
+              {% for fornitore in fornitori %}
+                {% if obj.fornitore == fornitore %}
+                    <option selected for="{{obj.ingrediente.nome_generico}}-fornitore" 
+                    value="{{fornitore.nome}}">{{fornitore.nome|capfirst}}</option>
+                {% else %}
+                    <option for="{{obj.ingrediente.nome_generico}}-fornitore" 
+                    value="{{fornitore.nome}}">{{fornitore.nome|capfirst}}</option>
+                {% endif %}
+              {% endfor %}
+          </select>
+
+      </td>
+    </tr>
+     {% endfor %}
+  </tbody>
+</table>
+
+
+
+
+
+
+</form>
+
+
+
+</div>
+
+
+{% endblock %}

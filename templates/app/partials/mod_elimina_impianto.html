@@ -1,0 +1,22 @@
+{% load togliSpazi %}
+
+<!-- Modale eliminazione area -->
+<div class="modal fade" id="{{impianto.nome|togli_spazi}}-elimina" tabindex="-1" role="dialog" aria-labelledby="modaleEliminazioneCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="container justify-content-center" id="titolo"><b>Elimina impianto: {{impianto.nome}}</b></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       Attenzione. Verranno cancellate anche tutte le ricette e gli chefs ad esso collegati. Confermare?
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+        <button type="submit" value="{{impianto.nome}}" name="elimina" class="btn btn-danger">Elimina</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,149 @@
+{% extends 'app/common.html' %}
+
+{% block title %}{{impianto.nome}} - {{year}} {% endblock %}
+
+
+
+{% block content %}
+
+{% load togliSpazi %}
+
+
+
+
+<div class="container-fluid my-2 text-center">
+  
+ 
+      <form method="POST" >
+             {% csrf_token %}
+              {% include 'app/partials/mod_elimina_impianto.html' %}
+          </form>
+
+
+      <form method="POST" >
+             {% csrf_token %}
+              {% include 'app/partials/mod_cambia_classificazione_impianto.html' %}
+          </form>
+
+      
+
+  <h1>
+    {{impianto.nome|capfirst}}
+
+    {% if request.user.is_staff %}
+      <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#{{ impianto.nome|togli_spazi }}-elimina">{% include 'app/partials/icone/_cestino.html' %} Elimina</button>
+    {% endif %}
+  </h1>
+
+
+
+<div class="container-fluid" align="left">
+<h5>{% include 'app/partials/icone/_info_square.html' %} Area: {{impianto.area|capfirst}}</h5>
+<h5>{% include 'app/partials/icone/_info_square.html' %} Classificazione: {{impianto.classificazione|capfirst}}
+
+  {% if request.user.is_staff %}
+   <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#{{ impianto.nome|togli_spazi }}-classificazione"> Cambia</button>
+  {% endif %}
+</h5>
+
+{% if request.user.is_staff %}
+<h5>
+  <a href="{% url 'listinoimpianto' impianto.nome %}" class="btn btn-primary"> {% include 'app/partials/icone/_currency.html' %} Listino prezzi
+  </a> 
+</h5>
+{% endif %}
+
+ </div> 
+
+    <hr width="100%" >
+
+ <form method="POST" >
+      {% csrf_token %}
+
+<div class="container-fluid">
+
+  <div class="input-group justify-content-center">
+    <input type="number" min="2021" step="1" max="{{annoMax}}" value="{{year}}" id="myRange" name='anno' >
+
+    <button type="submit" name="cambia" class="btn btn-secondary btn-sm"><b>Seleziona</b></button>
+
+  </div>
+
+  <p>Anno: <span id="demo" for="myRange"></span></p>
+
+</div> 
+
+<script>
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value;
+
+slider.oninput = function() {
+  output.innerHTML = this.value;
+}
+</script>
+
+
+
+
+ <br>
+
+<select class="form-select " style="width: auto" onChange="window.location.href=this.value">
+    {% for mese in mesi %}
+        {% if mese == month %}
+          <option selected value="{{mese}}">{{mese|capfirst}} {{year}} </option>
+        {% elif mese == 'tutti i mesi' %}
+          <option selected value="{% url 'impianto' year impianto.nome %}">{{mese|capfirst}}</option>
+        {% else %}
+          <option value="{{mese}}">{{mese|capfirst}} {{year}} </option>
+        {% endif %}
+    {% endfor %}
+</select>
+
+
+
+
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Numero della settimana</th>
+      <th scope="col">Da</th>
+      <th scope="col">A</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for week,estremi in settimane.items %}
+    <tr>
+      {% if week == weekOggi and year == annoOggi %}
+         <th scope="row">
+            <a href="{% url 'settimane' year impianto.nome week %}" class="list-group-item list-group-item-action list-group-item-{{estremi|slice:'2:3'|join:''}}">►{{week}}◄ </a>
+          </th>
+      {% else %}
+        <th scope="row">
+          <a href="{% url 'settimane' year impianto.nome week %}" class="list-group-item list-group-item-action list-group-item-{{estremi|slice:'2:3'|join:''}}"><b>{{week}}</b> </a>
+        </th>
+      {% endif %}
+    
+      <td>Lunedi {{ estremi|slice:"0:1"|join:" "  }}</td>
+      <td>Domenica {{ estremi|slice:"1:2"|join:" "  }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+    
+   
+
+
+ 
+
+
+
+</form>
+
+
+</div>
+
+{% endblock %}
